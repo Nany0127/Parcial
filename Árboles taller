@@ -1,0 +1,186 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+struct NodoArbol {
+    int id;
+    int fecha;
+    NodoArbol* izq;
+    NodoArbol* der;
+};
+
+NodoArbol* crearNodo(int id, int fecha) {
+    NodoArbol* nuevoNodo = (NodoArbol*)malloc(sizeof(NodoArbol));
+    nuevoNodo->id = id;
+    nuevoNodo->fecha = fecha;
+    nuevoNodo->izq = NULL;
+    nuevoNodo->der = NULL;
+    return nuevoNodo;
+}
+
+NodoArbol* insertarNodoId(NodoArbol* raiz, int id, int fecha) {
+    if (raiz == NULL) {
+        return crearNodo(id, fecha);
+    }
+    if (id < raiz->id) {
+        raiz->izq = insertarNodoId(raiz->izq, id, fecha);
+    } else {
+        raiz->der = insertarNodoId(raiz->der, id, fecha);
+    }
+    return raiz;
+}
+
+NodoArbol* insertarNodoFecha(NodoArbol* raiz, int id, int fecha) {
+    if (raiz == NULL) {
+        return crearNodo(id, fecha);
+    }
+    if (fecha < raiz->fecha) {
+        raiz->izq = insertarNodoFecha(raiz->izq, id, fecha);
+    } else {
+        raiz->der = insertarNodoFecha(raiz->der, id, fecha);
+    }
+    return raiz;
+}
+
+void insertarNodoPrincipalId(NodoArbol*& raiz) {
+    int id, fecha;
+    cout << "Ingrese el ID del nodo: ";
+    cin >> id;
+    cout << "Ingrese la fecha del nodo (AAAAMMDD): ";
+    cin >> fecha;
+    raiz = insertarNodoId(raiz, id, fecha);
+    cout << "Nodo insertado correctamente." << endl;
+}
+
+void insertarNodoPrincipalFecha(NodoArbol*& raiz) {
+    int id, fecha;
+    cout << "Ingrese el ID del nodo: ";
+    cin >> id;
+    cout << "Ingrese la fecha del nodo (AAAAMMDD): ";
+    cin >> fecha;
+    raiz = insertarNodoFecha(raiz, id, fecha);
+    cout << "Nodo insertado correctamente." << endl;
+}
+
+void preordenId(NodoArbol* raiz) {
+    if (raiz != NULL) {
+        cout << "ID: " << raiz->id << ", Fecha: " << raiz->fecha << endl;
+        preordenId(raiz->izq);
+        preordenId(raiz->der);
+    }
+}
+
+void inordenId(NodoArbol* raiz) {
+    if (raiz != NULL) {
+        inordenId(raiz->izq);
+        cout << "ID: " << raiz->id << ", Fecha: " << raiz->fecha << endl;
+        inordenId(raiz->der);
+    }
+}
+
+void posordenId(NodoArbol* raiz) {
+    if (raiz != NULL) {
+        posordenId(raiz->izq);
+        posordenId(raiz->der);
+        cout << "ID: " << raiz->id << ", Fecha: " << raiz->fecha << endl;
+    }
+}
+
+NodoArbol* eliminarNodoId(NodoArbol* raiz, int id) {
+    // Implementación de la eliminación por ID
+}
+
+NodoArbol* eliminarNodoFecha(NodoArbol* raiz, int fecha) {
+    // Implementación de la eliminación por fecha
+}
+
+void liberarArbol(NodoArbol* raiz) {
+    if (raiz != NULL) {
+        liberarArbol(raiz->izq);
+        liberarArbol(raiz->der);
+        free(raiz);
+    }
+}
+
+int main() {
+    NodoArbol* raizPrincipalId = NULL;
+    NodoArbol* raizPrincipalFecha = NULL;
+
+    int opcion;
+    do {
+        cout << "\n1. Insertar nodo por ID" << endl;
+        cout << "2. Insertar nodo por fecha" << endl;
+        cout << "3. Recorrer en preorden (por ID)" << endl;
+        cout << "4. Recorrer en inorden (por ID)" << endl;
+        cout << "5. Recorrer en posorden (por ID)" << endl;
+        cout << "6. Recorrer en preorden (por fecha)" << endl;
+        cout << "7. Recorrer en inorden (por fecha)" << endl;
+        cout << "8. Recorrer en posorden (por fecha)" << endl;
+        cout << "9. Eliminar nodo por ID" << endl;
+        cout << "10. Eliminar nodo por fecha" << endl;
+        cout << "11. Salir" << endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1:
+                insertarNodoPrincipalId(raizPrincipalId);
+                break;
+            case 2:
+                insertarNodoPrincipalFecha(raizPrincipalFecha);
+                break;
+            case 3:
+                cout << "Recorrido preorden del arbol principal (por ID):" << endl;
+                preordenId(raizPrincipalId);
+                break;
+            case 4:
+                cout << "Recorrido inorden del arbol principal (por ID):" << endl;
+                inordenId(raizPrincipalId);
+                break;
+            case 5:
+                cout << "Recorrido posorden del arbol principal (por ID):" << endl;
+                posordenId(raizPrincipalId);
+                break;
+            case 6:
+                cout << "Recorrido preorden del arbol principal (por fecha):" << endl;
+                preordenId(raizPrincipalFecha);
+                break;
+            case 7:
+                cout << "Recorrido inorden del arbol principal (por fecha):" << endl;
+                inordenId(raizPrincipalFecha);
+                break;
+            case 8:
+                cout << "Recorrido posorden del arbol principal (por fecha):" << endl;
+                posordenId(raizPrincipalFecha);
+                break;
+            case 9:
+                int idEliminar;
+                cout << "Ingrese el ID del nodo a eliminar: ";
+                cin >> idEliminar;
+                raizPrincipalId = eliminarNodoId(raizPrincipalId, idEliminar);
+                cout << "Nodo eliminado correctamente." << endl;
+                break;
+            case 10:
+                int fechaEliminar;
+                cout << "Ingrese la fecha del nodo a eliminar (AAAAMMDD): ";
+                cin >> fechaEliminar;
+                raizPrincipalFecha = eliminarNodoFecha(raizPrincipalFecha, fechaEliminar);
+                cout << "Nodo eliminado correctamente." << endl;
+                break;
+          
+            case 11:
+          
+                cout << "Saliendo del programa..." << endl;
+          
+                liberarArbol(raizPrincipalId);
+                liberarArbol(raizPrincipalFecha);
+                break;
+            default:
+                cout << "Opcion invalida. Intente de nuevo." << endl;
+          
+        }
+    } while (opcion != 11);
+
+    return 0;
+}
