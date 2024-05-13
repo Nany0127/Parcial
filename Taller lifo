@@ -1,0 +1,86 @@
+#include <iostream>
+
+using namespace std;
+
+struct Vehiculo {
+    int tipo; 
+};
+
+struct Nodo {
+    Vehiculo vehiculo;
+    Nodo* sig;
+};
+
+struct Parqueadero {
+    Nodo* inicio;
+    int dineroParqueo;
+    int dineroMovimiento;
+};
+
+void entrarVehiculo(Parqueadero& parqueadero, int tipo) {
+    Nodo* nuevo = (Nodo*)malloc(sizeof(Nodo));
+    nuevo->vehiculo.tipo = tipo;
+    nuevo->sig = parqueadero.inicio;
+    parqueadero.inicio = nuevo;
+    parqueadero.dineroParqueo += (tipo == 1) ? 5000 : 2500;
+}
+
+void sacarVehiculo(Parqueadero& parqueadero) {
+    if (parqueadero.inicio != NULL) {
+        Nodo* temp = parqueadero.inicio;
+        parqueadero.inicio = parqueadero.inicio->sig;
+        parqueadero.dineroMovimiento += (temp->vehiculo.tipo == 1) ? 1000 : 500;
+        free(temp);
+    } else {
+        cout << "No hay vehiculos en el parqueadero" << endl;
+    }
+}
+
+void mostrarTotales(Parqueadero& parqueadero) {
+    cout << "Total por parqueo: $" << parqueadero.dineroParqueo << endl;
+    cout << "Total por movimientos: $" << parqueadero.dineroMovimiento << endl;
+    cout << "Total manejado: $" << (parqueadero.dineroParqueo + parqueadero.dineroMovimiento) << endl;
+}
+
+int main() {
+    Parqueadero parqueadero;
+    int opcion;
+
+    parqueadero.inicio = NULL;
+    parqueadero.dineroParqueo = 0;
+    parqueadero.dineroMovimiento = 0;
+
+    do {
+        cout << "MENU" << endl;
+        cout << "1. Entrar vehiculo" << endl;
+        cout << "2. Sacar vehiculo" << endl;
+        cout << "3. Mostrar totales" << endl;
+        cout << "4. Salir" << endl;
+        cout << "Ingrese una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                int tipo;
+                cout << "Ingrese el tipo de vehiculo (1 para auto, 2 para moto): ";
+                cin >> tipo;
+                entrarVehiculo(parqueadero, tipo);
+                break;
+            }
+            case 2:
+                sacarVehiculo(parqueadero);
+                break;
+            case 3:
+                mostrarTotales(parqueadero);
+                break;
+            case 4:
+                cout << "Saliendo del programa..." << endl;
+                break;
+            default:
+                cout << "Opcion invalida. Intente de nuevo." << endl;
+                break;
+        }
+    } while (opcion != 4);
+
+    return 0;
+}
